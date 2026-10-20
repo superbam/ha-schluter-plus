@@ -10,7 +10,7 @@ from .api import SchluterClient
 from .const import DOMAIN
 from .coordinator import SchluterCoordinator
 
-PLATFORMS = [Platform.NUMBER, Platform.SELECT, Platform.SENSOR, Platform.BINARY_SENSOR]
+PLATFORMS = [Platform.CLIMATE, Platform.NUMBER, Platform.SELECT, Platform.SENSOR, Platform.BINARY_SENSOR]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

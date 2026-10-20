@@ -1,9 +1,10 @@
 # Schluter DITRA-HEAT Plus (Home Assistant)
 
-Adds what Home Assistant's built-in **Schluter** integration doesn't expose for DITRA-HEAT-E-WiFi thermostats:
+A full replacement for Home Assistant's built-in **Schluter** integration for DITRA-HEAT-E-WiFi thermostats, adding what it doesn't expose:
 
 | Entity (per thermostat) | What it does |
 |---|---|
+| **Climate** (the thermostat card) | Current and target temperature, idle/heating, and the same `temperature` / `current_temperature` / `hvac_action` attributes as the built-in. **Heat** = follow the schedule, **Off** = park the floor at the minimum (frost protection only), presets *schedule* / *manual*. Setting a temperature switches to manual at that temperature. |
 | **Mode** (select) | schedule / comfort / manual. Setting it to *schedule* returns the thermostat to its programmed schedule. |
 | **Manual temperature** (number) | The setpoint used in manual mode. Set it low (down to 5 °C / 41 °F) and select *manual* to effectively shut a floor off while nobody is home. |
 | **Element load (measured)** (sensor, W) | The heating element's load as the thermostat measures it (`LoadMeasuredWatt`). This is a *rating*, not consumption: it reads the same whether or not the floor is heating. Multiply it by the **Heating** state (e.g. in PowerCalc) to get power draw. |
@@ -11,9 +12,9 @@ Adds what Home Assistant's built-in **Schluter** integration doesn't expose for 
 | **Heating**, **Online**, **Vacation mode** (binary sensors) | State flags. |
 | **Error code** (sensor) | Diagnostic. |
 
-It is additive: it signs in to the same Schluter cloud API but does not replace or modify the built-in integration, so your existing `climate` entities keep working.
+It signs in to the same Schluter cloud API. You can run it next to the built-in integration, or replace the built-in one (see below).
 
-> **Status: v0.2.0.** The mode numbers were verified against a live DITRA-HEAT-E-WiFi (1 = schedule, 3 = manual, 2 = comfort; the `aioschluter` library labels them wrongly). Changing the mode and the manual temperature were tested on a real thermostat and restored.
+> **Status: v0.3.0.** The mode numbers were verified against a live DITRA-HEAT-E-WiFi (1 = schedule, 3 = manual, 2 = comfort; the `aioschluter` library labels them wrongly). Changing the mode and the manual temperature were tested on a real thermostat and restored.
 
 ### Away / return pattern
 
@@ -25,6 +26,15 @@ It is additive: it signs in to the same Schluter cloud API but does not replace 
 1. HACS -> three dots -> **Custom repositories** -> add `https://github.com/superbam/ha-schluter-plus`, category **Integration**.
 2. Download it, restart Home Assistant.
 3. Settings -> Devices & services -> **Add integration** -> *Schluter DITRA-HEAT Plus* -> sign in with your DITRA-HEAT account.
+
+## Replacing the built-in integration
+
+1. Install and set up this integration (below). It creates `climate.schluter_<room>` entities next to the built-in `climate.<room>` ones.
+2. Check that they behave: temperature, heating state, and **off** / **heat** (schedule).
+3. Settings -> Devices & services -> **Schluter** (the built-in) -> three dots -> **Disable**.
+4. Rename the new climate entities to the old ids (entity settings -> *Entity ID*) so dashboards, automations and the recorder history keep working.
+
+Off means manual mode at the thermostat's minimum temperature (5 C / 41 F), so the floor won't heat; heat means "resume the programmed schedule" (and cancels a vacation).
 
 ## Credentials
 
