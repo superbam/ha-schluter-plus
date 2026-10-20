@@ -10,14 +10,15 @@ API_APPLICATION_ID = 7  # the same application id the official site and app use
 
 SCAN_INTERVAL = timedelta(minutes=5)
 
-# RegulationMode values as the API reports them.
-#
-# UNVERIFIED: aioschluter's constants say 1=schedule, 2=manual, 3=away, but its own
-# set-temperature call sends 3 together with ManualTemperature. Confirm against a real
-# thermostat (see README, "Verifying mode numbers") and fix this one table.
+# RegulationMode values, verified against a live DITRA-HEAT-E-WiFi (Oct 2026):
+#   1 = schedule: the setpoint follows the weekly schedule.
+#   3 = manual:   the setpoint is ManualTemperature (aioschluter's own set-temperature call uses this).
+#   2 = comfort:  a temporary boost to ComfortTemperature until ComfortEndTime; once that time has
+#                 passed the thermostat keeps its previous setpoint.
+# (aioschluter's constants label these 1/2/3 as schedule/manual/away, which is wrong.)
+# Vacation is separate: VacationEnabled plus VacationBeginDay/EndDay/Temperature.
 MODE_NAMES = {
     1: "schedule",
     2: "comfort",
     3: "manual",
-    4: "vacation",
 }
