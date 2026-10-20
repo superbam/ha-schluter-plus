@@ -47,3 +47,11 @@ def heat_payload(serial: str) -> dict[str, Any]:
 
 def manual_payload(serial: str, celsius_value: float) -> dict[str, Any]:
     return {"SerialNumber": serial, "ManualTemperature": int(round(celsius_value * 100)), "RegulationMode": MODE_MANUAL, "VacationEnabled": False}
+
+
+def apply_optimistic(record: dict[str, Any], payload: dict[str, Any]) -> dict[str, Any]:
+    """What the thermostat record will look like once the cloud has applied `payload` (shown right away)."""
+    new = {**record, **{k: v for k, v in payload.items() if k != "SerialNumber"}}
+    if new.get("RegulationMode") == MODE_MANUAL and "ManualTemperature" in new:
+        new["SetPointTemp"] = new["ManualTemperature"]
+    return new  # in schedule mode the setpoint comes from the schedule, so it is left for the next refresh to fill in

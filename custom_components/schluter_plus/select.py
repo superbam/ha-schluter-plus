@@ -29,5 +29,4 @@ class SchluterModeSelect(SchluterEntity, SelectEntity):
         return MODE_NAMES.get(self._data.get("RegulationMode"))
 
     async def async_select_option(self, option: str) -> None:
-        await self.coordinator.client.async_set_mode(self._serial, NAME_TO_MODE[option])
-        await self.coordinator.async_request_refresh()
+        await self.coordinator.async_command(self._serial, {"SerialNumber": self._serial, "RegulationMode": NAME_TO_MODE[option], "VacationEnabled": False})

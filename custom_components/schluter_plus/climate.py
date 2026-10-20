@@ -81,8 +81,7 @@ class SchluterClimate(SchluterEntity, ClimateEntity):
         return helpers.preset(self._data)
 
     async def _apply(self, payload: dict[str, Any]) -> None:
-        await self.coordinator.client.async_update_thermostat(self._serial, payload)
-        await self.coordinator.async_request_refresh()
+        await self.coordinator.async_command(self._serial, payload)
 
     async def async_set_temperature(self, **kwargs: Any) -> None:
         if (value := kwargs.get(ATTR_TEMPERATURE)) is not None:

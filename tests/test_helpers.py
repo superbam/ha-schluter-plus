@@ -15,4 +15,9 @@ assert h.preset(sched) == "schedule" and h.preset(manual_warm) == "manual" and h
 assert h.off_payload("S1", sched) == {"SerialNumber": "S1", "ManualTemperature": 500, "RegulationMode": 3, "VacationEnabled": False}
 assert h.heat_payload("S1") == {"SerialNumber": "S1", "RegulationMode": 1, "VacationEnabled": False}
 assert h.manual_payload("S1", 21.5) == {"SerialNumber": "S1", "ManualTemperature": 2150, "RegulationMode": 3, "VacationEnabled": False}
+# optimistic state: manual shows the manual temperature as the setpoint at once; schedule keeps the old one until refreshed
+o = h.apply_optimistic({"RegulationMode": 1, "SetPointTemp": 2333, "ManualTemperature": 1722}, h.off_payload("S1", {"MinTemp": 500}))
+assert o["RegulationMode"] == 3 and o["SetPointTemp"] == 500 and o["VacationEnabled"] is False and "SerialNumber" not in o
+o = h.apply_optimistic({"RegulationMode": 3, "SetPointTemp": 500, "ManualTemperature": 500}, h.heat_payload("S1"))
+assert o["RegulationMode"] == 1 and o["SetPointTemp"] == 500
 print("helper tests passed")

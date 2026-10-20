@@ -41,7 +41,6 @@ class SchluterManualTemperature(SchluterEntity, NumberEntity):
 
     async def async_set_native_value(self, value: float) -> None:
         # Only changes the stored manual temperature; select "manual" in Mode to apply it.
-        await self.coordinator.client.async_update_thermostat(
+        await self.coordinator.async_command(
             self._serial, {"SerialNumber": self._serial, "ManualTemperature": int(round(value * 100))}
         )
-        await self.coordinator.async_request_refresh()
