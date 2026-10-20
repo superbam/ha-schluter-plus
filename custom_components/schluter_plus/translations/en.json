@@ -1,17 +1,86 @@
 {
   "config": {
     "step": {
-      "user": {"title": "Schluter DITRA-HEAT", "description": "Sign in with the account you use at ditra-heat-e-wifi.schluter.com. The password is stored in Home Assistant, not in any file you edit.", "data": {"email": "Email", "password": "Password"}},
-      "reauth_confirm": {"title": "Sign in again", "description": "The saved password for {email} no longer works. Enter the current one.", "data": {"password": "Password"}},
-      "reconfigure": {"title": "Change Schluter login", "data": {"email": "Email", "password": "Password"}}
+      "user": {
+        "title": "Schluter DITRA-HEAT",
+        "description": "Sign in with the account you use at ditra-heat-e-wifi.schluter.com. The password is stored in Home Assistant, not in any file you edit.",
+        "data": {
+          "email": "Email",
+          "password": "Password"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Sign in again",
+        "description": "The saved password for {email} no longer works. Enter the current one.",
+        "data": {
+          "password": "Password"
+        }
+      },
+      "reconfigure": {
+        "title": "Change Schluter login",
+        "data": {
+          "email": "Email",
+          "password": "Password"
+        }
+      }
     },
-    "error": {"invalid_auth": "Invalid email or password", "cannot_connect": "Cannot reach the Schluter cloud"},
-    "abort": {"already_configured": "This account is already set up", "reauth_successful": "Password updated", "reconfigure_successful": "Login updated"}
+    "error": {
+      "invalid_auth": "Invalid email or password",
+      "cannot_connect": "Cannot reach the Schluter cloud"
+    },
+    "abort": {
+      "already_configured": "This account is already set up",
+      "reauth_successful": "Password updated",
+      "reconfigure_successful": "Login updated"
+    }
   },
   "entity": {
-    "select": {"mode": {"name": "Mode"}},
-    "number": {"manual_temperature": {"name": "Manual temperature"}},
-    "sensor": {"load_measured": {"name": "Element load (measured)"}, "load_set": {"name": "Element load (programmed)"}, "error_code": {"name": "Error code"}},
-    "binary_sensor": {"heating": {"name": "Heating"}, "online": {"name": "Online"}, "vacation": {"name": "Vacation mode"}, "load_measuring": {"name": "Load measuring"}}
+    "select": {
+      "mode": {
+        "name": "Mode"
+      }
+    },
+    "number": {
+      "manual_temperature": {
+        "name": "Manual temperature"
+      }
+    },
+    "sensor": {
+      "load_measured": {
+        "name": "Element load (measured)"
+      },
+      "load_set": {
+        "name": "Element load (programmed)"
+      },
+      "error_code": {
+        "name": "Error code"
+      }
+    },
+    "binary_sensor": {
+      "heating": {
+        "name": "Heating",
+        "state": {
+          "on": "Heating",
+          "off": "Idle"
+        }
+      },
+      "online": {
+        "name": "Online"
+      },
+      "vacation": {
+        "name": "Vacation mode",
+        "state": {
+          "on": "On",
+          "off": "Off"
+        }
+      },
+      "load_measuring": {
+        "name": "Load measuring",
+        "state": {
+          "on": "Measuring",
+          "off": "Not measuring"
+        }
+      }
+    }
   }
 }

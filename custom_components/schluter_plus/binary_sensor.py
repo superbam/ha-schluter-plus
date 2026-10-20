@@ -19,7 +19,8 @@ class SchluterBinaryDescription(BinarySensorEntityDescription):
 
 
 BINARY_SENSORS = (
-    SchluterBinaryDescription(key="heating", field="Heating", translation_key="heating", device_class=BinarySensorDeviceClass.HEAT),
+    # No device class: HA labels a heat-class sensor Hot / Normal. The Heating / Idle wording comes from the state translations.
+    SchluterBinaryDescription(key="heating", field="Heating", translation_key="heating", icon="mdi:heating-coil"),
     SchluterBinaryDescription(key="online", field="Online", translation_key="online",
         device_class=BinarySensorDeviceClass.CONNECTIVITY, entity_category=EntityCategory.DIAGNOSTIC),
     SchluterBinaryDescription(key="vacation", field="VacationEnabled", translation_key="vacation"),
