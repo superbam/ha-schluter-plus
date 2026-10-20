@@ -4,7 +4,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Callable
 
-from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, SensorEntityDescription, SensorStateClass
+from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, SensorEntityDescription
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory, UnitOfPower
 from homeassistant.core import HomeAssistant
@@ -20,12 +20,15 @@ class SchluterSensorDescription(SensorEntityDescription):
 
 
 SENSORS = (
+    # These are the heating element's rated load (what it draws while the relay is on), NOT consumption: they read
+    # the same value whether or not the floor is heating. No state_class, so Home Assistant records no long-term
+    # statistics and nothing mistakes them for a live power draw. Use them as the watts in a PowerCalc/template
+    # sensor that is multiplied by the Heating state.
     SchluterSensorDescription(key="load_measured", field="LoadMeasuredWatt", translation_key="load_measured",
-        device_class=SensorDeviceClass.POWER, native_unit_of_measurement=UnitOfPower.WATT,
-        state_class=SensorStateClass.MEASUREMENT),
+        device_class=SensorDeviceClass.POWER, native_unit_of_measurement=UnitOfPower.WATT),
     SchluterSensorDescription(key="load_set", field="LoadManuallySetWatt", translation_key="load_set",
         device_class=SensorDeviceClass.POWER, native_unit_of_measurement=UnitOfPower.WATT,
-        state_class=SensorStateClass.MEASUREMENT, entity_category=EntityCategory.DIAGNOSTIC),
+        entity_category=EntityCategory.DIAGNOSTIC),
     SchluterSensorDescription(key="error_code", field="ErrorCode", translation_key="error_code",
         entity_category=EntityCategory.DIAGNOSTIC),
 )

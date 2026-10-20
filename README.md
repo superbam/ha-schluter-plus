@@ -6,8 +6,8 @@ Adds what Home Assistant's built-in **Schluter** integration doesn't expose for 
 |---|---|
 | **Mode** (select) | schedule / comfort / manual. Setting it to *schedule* returns the thermostat to its programmed schedule. |
 | **Manual temperature** (number) | The setpoint used in manual mode. Set it low (down to 5 °C / 41 °F) and select *manual* to effectively shut a floor off while nobody is home. |
-| **Measured load** (sensor, W) | The heating load the thermostat itself measures (`LoadMeasuredWatt`). |
-| **Programmed load** (sensor, W) | The load configured in the thermostat. |
+| **Element load (measured)** (sensor, W) | The heating element's load as the thermostat measures it (`LoadMeasuredWatt`). This is a *rating*, not consumption: it reads the same whether or not the floor is heating. Multiply it by the **Heating** state (e.g. in PowerCalc) to get power draw. |
+| **Element load (programmed)** (sensor, W) | The load configured in the thermostat (usually the 100 W default). |
 | **Heating**, **Online**, **Vacation mode** (binary sensors) | State flags. |
 | **Error code** (sensor) | Diagnostic. |
 
