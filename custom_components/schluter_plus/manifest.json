@@ -1,11 +1,13 @@
 {
   "domain": "schluter_plus",
   "name": "Schluter DITRA-HEAT Plus",
-  "codeowners": ["@superbam"],
+  "codeowners": [
+    "@superbam"
+  ],
   "config_flow": true,
   "documentation": "https://github.com/superbam/ha-schluter-plus",
-  "issue_tracker": "https://github.com/superbam/ha-schluter-plus/issues",
   "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/superbam/ha-schluter-plus/issues",
   "requirements": [],
-  "version": "0.3.3"
+  "version": "0.3.4"
 }
