@@ -8,7 +8,8 @@ A full replacement for Home Assistant's built-in **Schluter** integration for DI
 | **Mode** (select) | schedule / comfort / manual. Setting it to *schedule* returns the thermostat to its programmed schedule. |
 | **Manual temperature** (number) | The setpoint used in manual mode. Set it low (down to 5 °C / 41 °F) and select *manual* to effectively shut a floor off while nobody is home. |
 | **Element load (measured)** (sensor, W) | The heating element's load as the thermostat measures it (`LoadMeasuredWatt`). This is a *rating*, not consumption: it reads the same whether or not the floor is heating. Multiply it by the **Heating** state (e.g. in PowerCalc) to get power draw. |
-| **Element load (programmed)** (sensor, W) | The load configured in the thermostat (usually the 100 W default). |
+| **Element load (programmed)** (sensor, W) | The load typed into the thermostat (the 100 W factory default). Read-only: the cloud ignores writes to it. Disabled by default. |
+| **Load measuring** (binary sensor) | Whether the thermostat is measuring its own load. If it turns off, Schluter's own kWh reports fall back to the 100 W default and come out far too low. |
 | **Heating**, **Online**, **Vacation mode** (binary sensors) | State flags. |
 | **Error code** (sensor) | Diagnostic. |
 

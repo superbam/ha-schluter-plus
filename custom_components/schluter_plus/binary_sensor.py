@@ -23,6 +23,9 @@ BINARY_SENSORS = (
     SchluterBinaryDescription(key="online", field="Online", translation_key="online",
         device_class=BinarySensorDeviceClass.CONNECTIVITY, entity_category=EntityCategory.DIAGNOSTIC),
     SchluterBinaryDescription(key="vacation", field="VacationEnabled", translation_key="vacation"),
+    # If this turns off, Schluter's own kWh reports fall back to the 100 W programmed default and come out far too low.
+    SchluterBinaryDescription(key="load_measuring", field="LoadMeasuringActive", translation_key="load_measuring",
+        entity_category=EntityCategory.DIAGNOSTIC),
 )
 
 

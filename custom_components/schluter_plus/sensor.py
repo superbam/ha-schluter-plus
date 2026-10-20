@@ -28,7 +28,9 @@ SENSORS = (
         device_class=SensorDeviceClass.POWER, native_unit_of_measurement=UnitOfPower.WATT),
     SchluterSensorDescription(key="load_set", field="LoadManuallySetWatt", translation_key="load_set",
         device_class=SensorDeviceClass.POWER, native_unit_of_measurement=UnitOfPower.WATT,
-        entity_category=EntityCategory.DIAGNOSTIC),
+        entity_category=EntityCategory.DIAGNOSTIC,
+        # Read-only here (the cloud ignores writes) and unused while the thermostat measures its own load, so off by default.
+        entity_registry_enabled_default=False),
     SchluterSensorDescription(key="error_code", field="ErrorCode", translation_key="error_code",
         entity_category=EntityCategory.DIAGNOSTIC),
 )

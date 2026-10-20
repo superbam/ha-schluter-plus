@@ -12,6 +12,6 @@
     "select": {"mode": {"name": "Mode"}},
     "number": {"manual_temperature": {"name": "Manual temperature"}},
     "sensor": {"load_measured": {"name": "Element load (measured)"}, "load_set": {"name": "Element load (programmed)"}, "error_code": {"name": "Error code"}},
-    "binary_sensor": {"heating": {"name": "Heating"}, "online": {"name": "Online"}, "vacation": {"name": "Vacation mode"}}
+    "binary_sensor": {"heating": {"name": "Heating"}, "online": {"name": "Online"}, "vacation": {"name": "Vacation mode"}, "load_measuring": {"name": "Load measuring"}}
   }
 }
