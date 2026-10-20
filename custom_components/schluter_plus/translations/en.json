@@ -1,8 +1,12 @@
 {
   "config": {
-    "step": {"user": {"title": "Schluter DITRA-HEAT", "description": "Sign in with the account you use at ditra-heat-e-wifi.schluter.com.", "data": {"email": "Email", "password": "Password"}}},
+    "step": {
+      "user": {"title": "Schluter DITRA-HEAT", "description": "Sign in with the account you use at ditra-heat-e-wifi.schluter.com. The password is stored in Home Assistant, not in any file you edit.", "data": {"email": "Email", "password": "Password"}},
+      "reauth_confirm": {"title": "Sign in again", "description": "The saved password for {email} no longer works. Enter the current one.", "data": {"password": "Password"}},
+      "reconfigure": {"title": "Change Schluter login", "data": {"email": "Email", "password": "Password"}}
+    },
     "error": {"invalid_auth": "Invalid email or password", "cannot_connect": "Cannot reach the Schluter cloud"},
-    "abort": {"already_configured": "This account is already set up"}
+    "abort": {"already_configured": "This account is already set up", "reauth_successful": "Password updated", "reconfigure_successful": "Login updated"}
   },
   "entity": {
     "select": {"mode": {"name": "Mode"}},
