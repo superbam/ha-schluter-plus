@@ -30,6 +30,10 @@ It is additive: it signs in to the same Schluter cloud API but does not replace 
 
 You enter the email and password in Home Assistant's own UI (a masked field); they're stored in HA's config storage, never in this repository or a file you edit. If the password changes, HA prompts you to sign in again, or use the integration's *Reconfigure* menu. `tools/check_no_secrets.sh` (installed as a git pre-commit hook) refuses to commit anything that looks like a credential.
 
+## Trademarks and affiliation
+
+This is an unofficial, community project. It is not made, endorsed or supported by Schluter-Systems. "Schluter", "DITRA" and "DITRA-HEAT" and the Schluter logo are trademarks of Schluter Systems L.P.; the logo files in `custom_components/schluter_plus/brand/` are the same images Home Assistant's brand service already serves for its built-in Schluter integration and are used here only to identify the product this integration works with. They are not covered by this project's MIT license. If Schluter asks for them to be removed, they will be.
+
 ## Development
 
     python3 -m venv .venv && .venv/bin/pip install aiohttp
