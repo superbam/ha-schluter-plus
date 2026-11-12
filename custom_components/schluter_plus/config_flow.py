@@ -5,20 +5,36 @@ from collections.abc import Mapping
 from typing import Any
 
 import voluptuous as vol
-from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
+from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResult, OptionsFlow
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.helpers.selector import TextSelector, TextSelectorConfig, TextSelectorType
+from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig, SelectSelectorMode, TextSelector, TextSelectorConfig, TextSelectorType
 
 from .api import InvalidAuth, SchluterClient, SchluterError
-from .const import DOMAIN
+from .const import CONF_LOCAL_MODE, DOMAIN, LOCAL_MODES, LOCAL_OFF
 
 PASSWORD = TextSelector(TextSelectorConfig(type=TextSelectorType.PASSWORD, autocomplete="current-password"))
 EMAIL = TextSelector(TextSelectorConfig(type=TextSelectorType.EMAIL, autocomplete="username"))
 
 
+class SchluterPlusOptionsFlow(OptionsFlow):
+    """Choose how Home Assistant reaches the thermostats: cloud only, or also locally (needs a LAN DNS record, see the README)."""
+
+    async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        if user_input is not None:
+            return self.async_create_entry(data=user_input)
+        current = self.config_entry.options.get(CONF_LOCAL_MODE, LOCAL_OFF)
+        schema = vol.Schema({vol.Required(CONF_LOCAL_MODE, default=current): SelectSelector(
+            SelectSelectorConfig(options=list(LOCAL_MODES), translation_key=CONF_LOCAL_MODE, mode=SelectSelectorMode.LIST))})
+        return self.async_show_form(step_id="init", data_schema=schema)
+
+
 class SchluterPlusConfigFlow(ConfigFlow, domain=DOMAIN):
     VERSION = 1
+
+    @staticmethod
+    def async_get_options_flow(config_entry: ConfigEntry) -> SchluterPlusOptionsFlow:
+        return SchluterPlusOptionsFlow()
 
     async def _validate(self, email: str, password: str) -> str | None:
         """Return an error key, or None if the login works."""

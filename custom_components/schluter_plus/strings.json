@@ -82,5 +82,25 @@
         }
       }
     }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Connection",
+        "description": "Cloud only needs nothing. Relay and Local also run a gateway on this Home Assistant host that the thermostats connect to directly, which needs a DNS record on your network pointing na-thermos.ojelectronics.com at this host (see the README). Relay keeps the Schluter app working; Local does not.",
+        "data": {
+          "local_mode": "How to reach the thermostats"
+        }
+      }
+    }
+  },
+  "selector": {
+    "local_mode": {
+      "options": {
+        "off": "Cloud only (default)",
+        "relay": "Cloud + local gateway, relayed to Schluter (recommended)",
+        "local": "Local gateway only (the Schluter app shows offline)"
+      }
+    }
   }
 }

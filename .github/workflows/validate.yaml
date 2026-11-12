@@ -34,3 +34,4 @@ jobs:
       - run: pip install aiohttp
       - run: python tests/test_api.py
       - run: python tests/test_helpers.py
+      - run: python tests/test_gateway.py

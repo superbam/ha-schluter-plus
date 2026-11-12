@@ -1,10 +1,15 @@
 """Read-only: sign in and print what the Schluter API reports for each thermostat.
 
-    SCHLUTER_EMAIL=... SCHLUTER_PASSWORD=... python tools/discover.py
+    python tools/discover.py            # prompts for the email and password
+    SCHLUTER_EMAIL=... SCHLUTER_PASSWORD=... python tools/discover.py   # or pass them in the environment
+
+Add -v to print the sign-in steps (no passwords are printed).
 
 Nothing is written to Schluter. Your email and the account's other identifying fields are redacted in the output.
 """
 import asyncio
+import getpass
+import logging
 import importlib.util
 import json
 import os
@@ -28,7 +33,9 @@ def load_api():
 async def main():
     api = load_api()
     async with aiohttp.ClientSession() as s:
-        client = api.SchluterClient(s, os.environ["SCHLUTER_EMAIL"], os.environ["SCHLUTER_PASSWORD"])
+        email = os.environ.get("SCHLUTER_EMAIL") or input("Schluter email: ").strip()
+        password = os.environ.get("SCHLUTER_PASSWORD") or getpass.getpass("Schluter password: ")
+        client = api.SchluterClient(s, email, password)
         data = await client.async_get_thermostats()
     for serial, t in data.items():
         print(f"--- {t.get('Room')} (serial ending {serial[-4:]})")
@@ -36,4 +43,7 @@ async def main():
             print(f"  {k}: {'<redacted>' if k in REDACT else json.dumps(t[k])}")
 
 
+if "-v" in sys.argv:
+    logging.basicConfig(level=logging.DEBUG, format="%(name)s: %(message)s")
+    logging.getLogger("asyncio").setLevel(logging.WARNING)
 asyncio.run(main())

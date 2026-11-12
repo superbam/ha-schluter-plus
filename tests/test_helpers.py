@@ -1,8 +1,9 @@
 """Offline tests of the climate mapping (no Home Assistant needed)."""
-import importlib.util, os
+import importlib, os, sys, types
 
-spec = importlib.util.spec_from_file_location("helpers", os.path.join(os.path.dirname(__file__), "..", "custom_components", "schluter_plus", "helpers.py"))
-h = importlib.util.module_from_spec(spec); spec.loader.exec_module(h)
+pkg = types.ModuleType("schluter_plus"); pkg.__path__ = [os.path.join(os.path.dirname(__file__), "..", "custom_components", "schluter_plus")]
+sys.modules["schluter_plus"] = pkg   # helpers imports its constants package-relatively
+h = importlib.import_module("schluter_plus.helpers")
 
 sched = {"RegulationMode": 1, "SetPointTemp": 2333, "MinTemp": 500, "MaxTemp": 4000, "ManualTemperature": 1722}
 manual_low = {"RegulationMode": 3, "SetPointTemp": 500, "MinTemp": 500, "MaxTemp": 4000}

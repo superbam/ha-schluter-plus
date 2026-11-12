@@ -28,6 +28,20 @@ It signs in to the same Schluter cloud API. You can run it next to the built-in 
 2. Download it, restart Home Assistant.
 3. Settings -> Devices & services -> **Add integration** -> *Schluter DITRA-HEAT Plus* -> sign in with your DITRA-HEAT account.
 
+## Local control (optional, advanced)
+
+By default everything goes through Schluter's cloud. Under **Settings → Devices & services → Schluter DITRA-HEAT Plus → Configure** you can also turn on a local gateway: the thermostats keep a second connection open to OJ Electronics' device gateway (`na-thermos.ojelectronics.com`, TCP 9533), and with a DNS record on your network pointing that name at Home Assistant they connect here instead.
+
+| Mode | Schluter app | What changes |
+| --- | --- | --- |
+| Cloud only (default) | works | nothing listens on your network |
+| Relay (recommended) | works | changes go straight to the thermostat and keep working when the internet or Schluter's cloud is down; the cloud still supplies loads, error codes and vacation |
+| Local only | shows offline | the thermostat never reaches Schluter's cloud (no app, no firmware updates) |
+
+Setup: give Home Assistant a fixed IP, add a DNS record `na-thermos.ojelectronics.com` pointing at it (Pi-hole, AdGuard Home or your router), pick a mode, then power-cycle each thermostat. Port 9533 must be free (don't run another Schluter local gateway at the same time) and reachable from the thermostats. Only use this on a network you trust: any device on it can connect to that port.
+
+Schedule, manual and off commands go to the thermostat locally while it is connected; comfort and vacation changes still use the cloud. The gateway code and protocol knowledge come from [peskyAdmin/schluter-local](https://github.com/peskyAdmin/schluter-local) (MIT, see `NOTICE`). The device protocol is undocumented and could change with a firmware update; if the local link ever misbehaves, switch back to Cloud only.
+
 ## Replacing the built-in integration
 
 1. Install and set up this integration (below). It creates `climate.schluter_<room>` entities next to the built-in `climate.<room>` ones.

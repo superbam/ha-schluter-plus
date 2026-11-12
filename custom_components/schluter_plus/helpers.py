@@ -3,7 +3,8 @@ from __future__ import annotations
 
 from typing import Any
 
-MODE_SCHEDULE, MODE_COMFORT, MODE_MANUAL = 1, 2, 3
+from .const import LOCAL_FIELDS, MODE_COMFORT, MODE_MANUAL, MODE_SCHEDULE
+
 PRESET_SCHEDULE, PRESET_MANUAL = "schedule", "manual"
 OFF_MARGIN_C = 0.6  # a manual setpoint within this of the minimum counts as "off"
 
@@ -55,3 +56,28 @@ def apply_optimistic(record: dict[str, Any], payload: dict[str, Any]) -> dict[st
     if new.get("RegulationMode") == MODE_MANUAL and "ManualTemperature" in new:
         new["SetPointTemp"] = new["ManualTemperature"]
     return new  # in schedule mode the setpoint comes from the schedule, so it is left for the next refresh to fill in
+
+
+# Keys a command may carry and still be sent to the thermostat locally. Anything else (comfort/vacation/schedule
+# edits, which need fields the local link doesn't decode yet) goes through the cloud.
+_LOCAL_PAYLOAD_KEYS = {"SerialNumber", "RegulationMode", "ManualTemperature", "VacationEnabled"}
+
+
+def local_command(payload: dict[str, Any], record: dict[str, Any]) -> tuple[int, int | None] | None:
+    """Translate a cloud-style payload into the local gateway's (mode, setpoint in Celsius x200), or None if it can't go local."""
+    if not set(payload) <= _LOCAL_PAYLOAD_KEYS or record.get("VacationEnabled"):
+        return None  # a vacation can only be cancelled through the cloud
+    mode = payload.get("RegulationMode")
+    if mode == MODE_SCHEDULE and "ManualTemperature" not in payload:
+        return MODE_SCHEDULE, None
+    if mode == MODE_MANUAL:
+        manual = payload.get("ManualTemperature")
+        return MODE_MANUAL, None if manual is None else int(manual) * 2
+    return None
+
+
+def merge_local(cloud: dict[str, Any], local: dict[str, Any] | None, connected: bool) -> dict[str, Any]:
+    """The thermostat's own report wins for what it reports (while it is connected locally); the cloud supplies the rest."""
+    if not local or not connected:
+        return cloud
+    return {**cloud, **{k: v for k, v in local.items() if k in LOCAL_FIELDS}}

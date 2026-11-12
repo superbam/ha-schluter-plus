@@ -46,6 +46,7 @@ class SchluterClient:
                 data = await resp.json()
         except ClientError as err:
             raise SchluterError(f"Cannot reach Schluter: {err}") from err
+        _LOGGER.debug("Schluter login: ErrorCode=%s has_session=%s", data.get("ErrorCode"), bool(data.get("SessionId")))
         if not data.get("SessionId"):
             raise InvalidAuth("Invalid username or password")
         self._session_id = data["SessionId"]
@@ -59,6 +60,7 @@ class SchluterClient:
                 async with self._session.request(
                     method, url, params={"sessionId": self._session_id, **(params or {})}, json=json
                 ) as resp:
+                    _LOGGER.debug("Schluter %s %s -> HTTP %s (attempt %s)", method, url, resp.status, attempt)
                     if resp.status == 401 and attempt == 1:
                         self._session_id = None  # expired: sign in again once
                         continue
